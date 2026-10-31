@@ -123,3 +123,6 @@ export default function SplashScreen({ onFinish, duration = 5400 }) {
     </main>
   )
 }
+
+
+

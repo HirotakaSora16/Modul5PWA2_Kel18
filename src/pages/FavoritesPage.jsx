@@ -133,3 +133,7 @@ export default function FavoritesPage({ onSelectGun, onNavigateCatalog }) {
     </div>
   )
 }
+
+
+
+

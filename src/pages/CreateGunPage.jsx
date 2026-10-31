@@ -709,3 +709,4 @@ export default function CreateGunPage({ onBack, onSuccess }) {
     </div>
   )
 }
+

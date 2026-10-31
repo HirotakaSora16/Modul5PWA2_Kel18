@@ -78,3 +78,6 @@ export default function GunCard({ gun, onSelect, onEdit, onDelete }) {
     </li>
   )
 }
+
+
+
