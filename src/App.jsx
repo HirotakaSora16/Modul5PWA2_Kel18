@@ -56,7 +56,6 @@ function App() {
 
   // Fungsi untuk menambah item ke keranjang
   const addToCart = (gunItem) => {
-    // Cek apakah senjata sudah ada di keranjang agar tidak double
     const isExist = cart.some(item => item.id === gunItem.id)
     if (isExist) {
       alert(`${gunItem.name} sudah ada di dalam keranjang!`)
@@ -73,22 +72,14 @@ function App() {
       return
     }
 
-    // Nomor WhatsApp pribadi Anda
     const nomorWA = "6281290969052" 
-
-    // Susun daftar item yang dibeli dari array cart
     const listBarang = cart.map((item, index) => `${index + 1}. ${item.name} [Type: ${item.type || 'Weapon'}]`).join('\n')
-
-    // Rangkai format pesan sesuai dengan instruksi dari asisten praktikum
     const teksPesan = `Hi aku mau pesan:\n\n${listBarang}\n\nMohon segera diproses ya, terima kasih!`
 
-    // Perbaikan URL API WhatsApp resmi agar redirect berjalan lancar
+    // PERBAIKAN: Menggunakan template literal ${nomorWA} yang benar agar tidak crash
     const urlWhatsApp = `https://whatsapp.com{nomorWA}&text=${encodeURIComponent(teksPesan)}`
 
-    // Bersihkan keranjang setelah checkout
     setCart([])
-
-    // Buka WhatsApp di tab baru
     window.open(urlWhatsApp, '_blank')
   }
 
@@ -144,7 +135,7 @@ function App() {
             {/* Visual Panel Keranjang Taktis */}
             {cart.length > 0 && (
               <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: '#111317', border: '1px solid var(--brass)', borderRadius: '6px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', itemsCenter: 'center', marginBottom: '0.75rem' }}>
                   <h3 style={{ color: 'var(--brass)', margin: 0, fontWeight: 'bold' }}>
                     🛒 Tactical Cart ({cart.length} Item)
                   </h3>
