@@ -14,7 +14,7 @@ import { formatPrice, averageRating } from '../../utils/helpers'
  * @param {Function} [props.onEdit]  — navigate to edit page
  * @param {Function} [props.onDelete]— trigger delete flow
  */
-export default function GunDetail({ gun, onBack, onEdit, onDelete }) {
+export default function GunDetail({ gun, onBack, onEdit, onDelete, onAddToCart}) {
   const imgSrc = gun.image_url || gun.image || '/guns/pistol.svg'
   const category = gun.type || gun.category || '—'
   const caliber = gun.caliber || gun.difficulty || ''
@@ -84,6 +84,16 @@ export default function GunDetail({ gun, onBack, onEdit, onDelete }) {
 
           <div className="detail-actions">
             <FavoriteButton gunId={gun.id || gun.name} />
+            
+            {/* 👇 SISIHKAN TOMBOL KERANJANG DI SINI 👇 */}
+  <button
+    type="button"
+    onClick={() => onAddToCart(gun)}
+    className="btn btn--primary"
+    style={{ backgroundColor: 'var(--brass)', color: 'var(--bg)', borderColor: 'var(--brass)' }}
+  >
+    🛒 Tambah ke Keranjang
+  </button>
             {onEdit && (
               <button type="button" className="btn btn--outline" onClick={() => onEdit(gun)}>
                 Edit

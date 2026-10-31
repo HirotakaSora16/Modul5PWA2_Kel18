@@ -16,6 +16,7 @@ import gunService from './services/gunService.js'
 import './App.css'
 
 function App() {
+  const [cart, setCart] = useState([]) // Menampung item persenjataan yang dipilih
   const [showSplash, setShowSplash] = useState(true)
   const [tab, setTab] = useState('Catalog')
   const [mode, setMode] = useState('list') // 'list' | 'create' | 'edit' | 'detail'
@@ -51,6 +52,44 @@ function App() {
     setMode('list')
     setSelectedGun(null)
     setEditingGun(null)
+  }
+
+  // Fungsi untuk menambah item ke keranjang
+  const addToCart = (gunItem) => {
+    // Cek apakah senjata sudah ada di keranjang agar tidak double
+    const isExist = cart.some(item => item.id === gunItem.id)
+    if (isExist) {
+      alert(`${gunItem.name} sudah ada di dalam keranjang!`)
+      return
+    }
+    setCart([...cart, gunItem])
+    alert(`${gunItem.name} berhasil ditambahkan ke keranjang.`)
+  }
+
+  // Fungsi Checkout otomatis mengarah ke WhatsApp pribadi Anda
+  const handleCheckoutWhatsApp = () => {
+    if (cart.length === 0) {
+      alert('Keranjang Anda masih kosong! Silakan pilih senjata terlebih dahulu.')
+      return
+    }
+
+    // Nomor WhatsApp pribadi Anda
+    const nomorWA = "6281290969052" 
+
+    // Susun daftar item yang dibeli dari array cart
+    const listBarang = cart.map((item, index) => `${index + 1}. ${item.name} [Type: ${item.type || 'Weapon'}]`).join('\n')
+
+    // Rangkai format pesan sesuai dengan instruksi dari asisten praktikum
+    const teksPesan = `Hi aku mau pesan:\n\n${listBarang}\n\nMohon segera diproses ya, terima kasih!`
+
+    // Perbaikan URL API WhatsApp resmi agar redirect berjalan lancar
+    const urlWhatsApp = `https://whatsapp.com{nomorWA}&text=${encodeURIComponent(teksPesan)}`
+
+    // Bersihkan keranjang setelah checkout
+    setCart([])
+
+    // Buka WhatsApp di tab baru
+    window.open(urlWhatsApp, '_blank')
   }
 
   return (
@@ -95,12 +134,47 @@ function App() {
             onBack={handleBackToList}
             onEdit={(g) => handleNavigate('Edit', g)}
             onDelete={(g) => setDeleteTarget(g)}
+            onAddToCart={addToCart}
           />
         )}
 
         {/* Top-level Tabs */}
         {mode === 'list' && (
           <>
+            {/* Visual Panel Keranjang Taktis */}
+            {cart.length > 0 && (
+              <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: '#111317', border: '1px solid var(--brass)', borderRadius: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                  <h3 style={{ color: 'var(--brass)', margin: 0, fontWeight: 'bold' }}>
+                    🛒 Tactical Cart ({cart.length} Item)
+                  </h3>
+                  <button 
+                    onClick={() => setCart([])} 
+                    style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.8rem' }}
+                  >
+                    Kosongkan
+                  </button>
+                </div>
+                
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1rem 0', fontSize: '0.9rem', color: '#ccc' }}>
+                  {cart.map((item) => (
+                    <li key={item.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #222', paddingBottom: '0.25rem', marginBottom: '0.25rem' }}>
+                      <span>• {item.name}</span>
+                      <span style={{ fontSize: '0.8rem', color: '#666', fontStyle: 'italic' }}>({item.type || 'Weapon'})</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={handleCheckoutWhatsApp}
+                  className="btn btn--primary"
+                  style={{ width: '100%', display: 'block', textAlign: 'center', backgroundColor: '#25D366', color: '#fff', borderColor: '#25D366', fontWeight: 'bold' }}
+                >
+                  💬 Hubungi WA Pribadi untuk Checkout
+                </button>
+              </div>
+            )}
+
             {tab === 'Catalog' && (
               <Catalog
                 onNavigate={(destination, payload) => handleNavigate(destination, payload)}
@@ -153,4 +227,3 @@ function App() {
 }
 
 export default App
-
